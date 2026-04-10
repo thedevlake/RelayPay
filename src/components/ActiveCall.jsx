@@ -46,7 +46,7 @@ export default function ActiveCall({
         <button
           type="button"
           onClick={onEndCall}
-          className="rounded-xl bg-[#1e3a8a] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1d4ed8]"
+          className="rounded-xl bg-[#14532d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#166534]"
         >
           End Call
         </button>

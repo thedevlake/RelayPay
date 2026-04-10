@@ -73,7 +73,7 @@ export default function PreCallForm({ onStartCall, error, status }) {
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-[#050913] px-4 py-3 text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-[#1e3a8a]"
+              className="w-full rounded-xl border border-slate-700 bg-[#050913] px-4 py-3 text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-[#15803d]"
               placeholder="Jane Doe"
             />
             {validationErrors.fullName ? (
@@ -91,7 +91,7 @@ export default function PreCallForm({ onStartCall, error, status }) {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-[#050913] px-4 py-3 text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-[#1e3a8a]"
+              className="w-full rounded-xl border border-slate-700 bg-[#050913] px-4 py-3 text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-[#15803d]"
               placeholder="jane@company.com"
             />
             {validationErrors.email ? (
@@ -121,7 +121,7 @@ export default function PreCallForm({ onStartCall, error, status }) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-[#1e3a8a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl bg-[#14532d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#166534] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSubmitting ? 'Starting call...' : 'Start Voice Support Call'}
           </button>

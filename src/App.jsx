@@ -1,38 +1,50 @@
-import { useEffect, useMemo, useState } from 'react';
-import relayPayLogo from './assets/relaypay-logo.png';
-import { useVapi } from './hooks/useVapi';
+import { useEffect, useMemo, useState } from "react";
+import relayPayLogo from "./assets/relaypay-logo.png";
+import { useTheme } from "./hooks/useTheme";
+import { useVapi } from "./hooks/useVapi";
 
 const ISSUE_OPTIONS = [
-  { value: '', label: 'Select a topic' },
-  { value: 'transfer_fees', label: 'Transfer fees and pricing' },
-  { value: 'account_access', label: 'Account access' },
-  { value: 'payment_delay', label: 'Payment delay or failure' },
-  { value: 'invoicing', label: 'Invoicing' },
-  { value: 'onboarding', label: 'Onboarding and verification' },
-  { value: 'compliance', label: 'Compliance / KYC' },
-  { value: 'other', label: 'Something else' }
+  { value: "", label: "Select a topic" },
+  { value: "transfer_fees", label: "Transfer fees and pricing" },
+  { value: "account_access", label: "Account access" },
+  { value: "payment_delay", label: "Payment delay or failure" },
+  { value: "invoicing", label: "Invoicing" },
+  { value: "onboarding", label: "Onboarding and verification" },
+  { value: "compliance", label: "Compliance / KYC" },
+  { value: "other", label: "Something else" },
 ];
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function App() {
-  const { isCallActive, isSpeaking, isMuted, status, error, startCall, endCall, toggleMute } = useVapi();
+  const { theme, toggleTheme } = useTheme();
+  const {
+    isCallActive,
+    isSpeaking,
+    isMuted,
+    status,
+    error,
+    startCall,
+    endCall,
+    toggleMute,
+  } = useVapi();
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    issueType: ''
+    fullName: "",
+    email: "",
+    issueType: "",
   });
-  const [formError, setFormError] = useState('');
+  const [formError, setFormError] = useState("");
   const [sessionOpen, setSessionOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const callerTag = useMemo(
     () => `${formData.fullName.trim()} · ${formData.email.trim()}`,
-    [formData.fullName, formData.email]
+    [formData.fullName, formData.email],
   );
 
   useEffect(() => {
-    if (!sessionOpen || isCallActive || status !== 'Call ended') return undefined;
+    if (!sessionOpen || isCallActive || status !== "Call ended")
+      return undefined;
     const timerId = window.setTimeout(() => {
       setSessionOpen(false);
     }, 3000);
@@ -40,25 +52,27 @@ function App() {
   }, [isCallActive, sessionOpen, status]);
 
   const statusTitle = useMemo(() => {
-    if (status === 'Connecting...') return 'Connecting';
-    if (status === 'Connected') return 'Connected';
-    if (status === 'Agent speaking') return 'Speaking...';
-    if (status === 'Listening') return 'Listening';
-    if (status === 'Call ended') return 'Call ended';
-    if (status === 'Error') return 'Error';
-    return status || 'Ready';
+    if (status === "Connecting...") return "Connecting";
+    if (status === "Connected") return "Connected";
+    if (status === "Agent speaking") return "Speaking...";
+    if (status === "Listening") return "Listening";
+    if (status === "Call ended") return "Call ended";
+    if (status === "Error") return "Error";
+    return status || "Ready";
   }, [status]);
 
   const statusSubText = useMemo(() => {
-    if (status === 'Connecting...') return 'Please wait a moment';
-    if (status === 'Connected' || status === 'Listening') return 'Go ahead and speak';
-    if (status === 'Agent speaking') return '';
-    if (status === 'Call ended') return 'Your support session has been completed.';
-    if (status === 'Error') return error || 'Please try again';
-    return 'Voice support is available';
+    if (status === "Connecting...") return "Please wait a moment";
+    if (status === "Connected" || status === "Listening")
+      return "Go ahead and speak";
+    if (status === "Agent speaking") return "";
+    if (status === "Call ended")
+      return "Your support session has been completed.";
+    if (status === "Error") return error || "Please try again";
+    return "Voice support is available";
   }, [error, status]);
 
-  const isCallCompleted = status === 'Call ended';
+  const isCallCompleted = status === "Call ended";
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -67,14 +81,14 @@ function App() {
 
   const validate = () => {
     if (!formData.fullName.trim() || !formData.email.trim()) {
-      setFormError('Please complete your name and email.');
+      setFormError("Please complete your name and email.");
       return false;
     }
     if (!emailPattern.test(formData.email)) {
-      setFormError('Please enter a valid email address.');
+      setFormError("Please enter a valid email address.");
       return false;
     }
-    setFormError('');
+    setFormError("");
     return true;
   };
 
@@ -85,7 +99,7 @@ function App() {
     await startCall({
       customer_name: formData.fullName.trim(),
       customer_email: formData.email.trim(),
-      issue_type: formData.issueType
+      issue_type: formData.issueType,
     });
     setIsSubmitting(false);
   };
@@ -105,10 +119,47 @@ function App() {
 
       <nav>
         <div className="logo">
-          <img src={relayPayLogo} alt="RelayPay logo" className="h-8 w-auto object-contain" />
-          
+          <img
+            src={relayPayLogo}
+            alt="RelayPay logo"
+            className="h-8 w-auto object-contain"
+          />
         </div>
         <div className="nav-right">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={
+              theme === "dark"
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? (
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
           <span className="nav-link">Help centre</span>
           <div className="status-pill">
             <div className="status-dot" />
@@ -123,12 +174,12 @@ function App() {
           Cross-border payments,
           <br />
           <strong>
-            <span className="blue">answered</span> instantly.
+            <span className="accent">answered</span> instantly.
           </strong>
         </h1>
         <p className="hero-sub">
-          Speak with our support agent for instant help with transfers, invoicing, fees, and
-          account queries.
+          Speak with our support agent for instant help with transfers,
+          invoicing, fees, and account queries.
         </p>
       </div>
 
@@ -147,18 +198,25 @@ function App() {
         </div>
         <div className="vis-bars">
           {Array.from({ length: 9 }).map((_, index) => (
-            <div key={`vb-${index + 1}`} className={`vb ${isCallActive || isSpeaking ? 'on' : ''}`} />
+            <div
+              key={`vb-${index + 1}`}
+              className={`vb ${isCallActive || isSpeaking ? "on" : ""}`}
+            />
           ))}
         </div>
 
-        <div className={`call-status-hero ${sessionOpen ? 'show' : ''}`}>
-          <div className={`call-status-text ${isCallCompleted ? 'completed' : ''}`}>
-            {isCallCompleted ? 'Support Session Completed' : statusTitle}
+        <div className={`call-status-hero ${sessionOpen ? "show" : ""}`}>
+          <div
+            className={`call-status-text ${isCallCompleted ? "completed" : ""}`}
+          >
+            {isCallCompleted ? "Support Session Completed" : statusTitle}
           </div>
           <div className="call-status-sub">
-            {isCallCompleted ? 'A RelayPay specialist can follow up if additional review is required.' : statusSubText}
+            {isCallCompleted
+              ? "A RelayPay specialist can follow up if additional review is required."
+              : statusSubText}
           </div>
-          <div className={`caller-chip ${isCallCompleted ? 'completed' : ''}`}>
+          <div className={`caller-chip ${isCallCompleted ? "completed" : ""}`}>
             <div className="chip-dot" />
             <span>{callerTag}</span>
           </div>
@@ -172,7 +230,9 @@ function App() {
             <span className="cap-num">01</span>
             <div>
               <div className="cap-title">Fees & pricing</div>
-              <div className="cap-desc">Transfer costs, corridors, and exchange rates</div>
+              <div className="cap-desc">
+                Transfer costs, corridors, and exchange rates
+              </div>
             </div>
           </div>
           <div className="cap-item">
@@ -186,14 +246,18 @@ function App() {
             <span className="cap-num">03</span>
             <div>
               <div className="cap-title">Invoicing</div>
-              <div className="cap-desc">Multi-currency and contractor payouts</div>
+              <div className="cap-desc">
+                Multi-currency and contractor payouts
+              </div>
             </div>
           </div>
           <div className="cap-item">
             <span className="cap-num">04</span>
             <div>
               <div className="cap-title">Compliance</div>
-              <div className="cap-desc">KYC, verification, regulatory queries</div>
+              <div className="cap-desc">
+                KYC, verification, regulatory queries
+              </div>
             </div>
           </div>
           <div className="cap-item">
@@ -213,7 +277,9 @@ function App() {
         </div>
 
         <div className="center-card">
-          <div className="form-label">{sessionOpen ? 'Live call' : 'Begin a support call'}</div>
+          <div className="form-label">
+            {sessionOpen ? "Live call" : "Begin a support call"}
+          </div>
 
           {!sessionOpen ? (
             <div>
@@ -257,7 +323,10 @@ function App() {
                     onChange={handleInputChange}
                   >
                     {ISSUE_OPTIONS.map((option) => (
-                      <option key={option.value || 'placeholder'} value={option.value}>
+                      <option
+                        key={option.value || "placeholder"}
+                        value={option.value}
+                      >
                         {option.label}
                       </option>
                     ))}
@@ -269,20 +338,27 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className={`err ${formError ? 'show' : ''}`}>{formError}</div>
-              <button className="btn-connect" type="button" onClick={handleStartCall} disabled={isSubmitting}>
+              <div className={`err ${formError ? "show" : ""}`}>
+                {formError}
+              </div>
+              <button
+                className="btn-connect"
+                type="button"
+                onClick={handleStartCall}
+                disabled={isSubmitting}
+              >
                 <svg viewBox="0 0 24 24">
                   <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                   <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
                 </svg>
-                {isSubmitting ? 'Connecting...' : 'Connect to support'}
+                {isSubmitting ? "Connecting..." : "Connect to support"}
               </button>
               {error ? <div className="err show">{error}</div> : null}
             </div>
           ) : (
             <div className="call-controls show">
               <button className="cbtn" type="button" onClick={toggleMute}>
-                {isMuted ? 'Unmute' : 'Mute'}
+                {isMuted ? "Unmute" : "Mute"}
               </button>
               <button className="cbtn danger" type="button" onClick={handleEnd}>
                 End call
@@ -302,7 +378,9 @@ function App() {
             <span className="cap-num">01</span>
             <div>
               <div className="cap-title">Fill the form</div>
-              <div className="cap-desc">Enter your name, email, and select your topic</div>
+              <div className="cap-desc">
+                Enter your name, email, and select your topic
+              </div>
             </div>
           </div>
           <div className="cap-item">
@@ -316,14 +394,18 @@ function App() {
             <span className="cap-num">03</span>
             <div>
               <div className="cap-title">Get your answer</div>
-              <div className="cap-desc">Clear, accurate responses from our knowledge base</div>
+              <div className="cap-desc">
+                Clear, accurate responses from our knowledge base
+              </div>
             </div>
           </div>
           <div className="cap-item">
             <span className="cap-num">04</span>
             <div>
               <div className="cap-title">Escalate if needed</div>
-              <div className="cap-desc">Complex issues routed to a human specialist</div>
+              <div className="cap-desc">
+                Complex issues routed to a human specialist
+              </div>
             </div>
           </div>
         </div>
