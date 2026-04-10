@@ -84,9 +84,10 @@ export function useVapi() {
       await vapiRef.current.start(ASSISTANT_ID, {
         variableValues: {
           customer_name,
+          customer_first_name: customer_name.split(" ")[0],
           customer_email,
-          issue_type
-        }
+          issue_type,
+        },
       });
       return true;
     } catch (startError) {

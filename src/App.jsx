@@ -53,10 +53,12 @@ function App() {
     if (status === 'Connecting...') return 'Please wait a moment';
     if (status === 'Connected' || status === 'Listening') return 'Go ahead and speak';
     if (status === 'Agent speaking') return '';
-    if (status === 'Call ended') return 'Thank you for contacting RelayPay';
+    if (status === 'Call ended') return 'Your support session has been completed.';
     if (status === 'Error') return error || 'Please try again';
     return 'Voice support is available';
   }, [error, status]);
+
+  const isCallCompleted = status === 'Call ended';
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -150,9 +152,13 @@ function App() {
         </div>
 
         <div className={`call-status-hero ${sessionOpen ? 'show' : ''}`}>
-          <div className="call-status-text">{statusTitle}</div>
-          <div className="call-status-sub">{statusSubText}</div>
-          <div className="caller-chip">
+          <div className={`call-status-text ${isCallCompleted ? 'completed' : ''}`}>
+            {isCallCompleted ? 'Support Session Completed' : statusTitle}
+          </div>
+          <div className="call-status-sub">
+            {isCallCompleted ? 'A RelayPay specialist can follow up if additional review is required.' : statusSubText}
+          </div>
+          <div className={`caller-chip ${isCallCompleted ? 'completed' : ''}`}>
             <div className="chip-dot" />
             <span>{callerTag}</span>
           </div>

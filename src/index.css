@@ -270,6 +270,11 @@ nav {
   margin-bottom: 3px;
 }
 
+.call-status-text.completed {
+  color: #dbeafe;
+  font-weight: 500;
+}
+
 .call-status-sub {
   font-size: 11px;
   color: #3a4a68;
@@ -286,6 +291,12 @@ nav {
   border-radius: 20px;
   font-size: 11px;
   color: #4a6090;
+}
+
+.caller-chip.completed {
+  border-color: #1d2b4f;
+  background: #0b1326;
+  color: #6f8fcb;
 }
 
 .chip-dot {
